@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>TOEIC Lesson 1 – Flashcards</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        background: #f5f7fb;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      .card-container {
+        width: 360px;
+        perspective: 1000px;
+        text-align: center;
+      }
+
+      .card {
+        box-sizing: border-box;
+        width: 100%;
+        height: 220px;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        cursor: pointer;
+        transition: transform 0.6s;
+        transform-style: preserve-3d;
+        position: relative;
+      }
+
+      .card.flip {
+        transform: rotateY(180deg);
+      }
+
+      .side {
+        position: absolute;
+        backface-visibility: hidden;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+
+      .back {
+        transform: rotateY(180deg);
+      }
+
+      h2 {
+        margin: 0 0 8px;
+        font-size: 26px;
+      }
+
+      p {
+        margin: 0;
+        font-size: 18px;
+        color: #444;
+      }
+
+      .controls {
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+      }
+
+      button {
+        padding: 10px 16px;
+        border: none;
+        border-radius: 8px;
+        background: #4f46e5;
+        color: white;
+        font-size: 14px;
+        cursor: pointer;
+      }
+
+      button:disabled {
+        background: #aaa;
+      }
+
+      .hint {
+        margin-top: 12px;
+        font-size: 13px;
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card-container">
+      <div id="card" class="card">
+        <div class="side front">
+          <h2 id="word"></h2>
+          <p>👉 Nhấn để xem nghĩa</p>
+        </div>
+        <div class="side back">
+          <h2 id="meaning"></h2>
+          <p id="example"></p>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button id="prev">⬅ Trước</button>
+        <button id="next">Sau ➡</button>
+      </div>
+
+      <div class="hint">Lesson 1 – Contracts</div>
+    </div>
+
+    <script>
+      const cards = [
+        {
+          word: "abide by",
+          meaning: "tuân thủ",
+          example: "Employees must abide by company policies.",
+        },
+        {
+          word: "assurance",
+          meaning: "sự đảm bảo / cam kết",
+          example:
+            "The manager gave assurance that the issue would be resolved.",
+        },
+        {
+          word: "cancellation",
+          meaning: "sự hủy bỏ",
+          example: "A cancellation fee may apply.",
+        },
+        {
+          word: "determine",
+          meaning: "xác định / quyết định",
+          example: "Sales results determine future plans.",
+        },
+        {
+          word: "engage",
+          meaning: "thuê / tham gia / làm gắn kết",
+          example: "The company engaged a consulting firm.",
+        },
+        {
+          word: "establish",
+          meaning: "thành lập / thiết lập",
+          example: "The company established clear guidelines.",
+        },
+        {
+          word: "obligate",
+          meaning: "bắt buộc / ràng buộc",
+          example: "The contract obligates both parties to comply.",
+        },
+        {
+          word: "party",
+          meaning: "bên (trong hợp đồng)",
+          example: "Both parties agreed to the terms.",
+        },
+        {
+          word: "provision",
+          meaning: "điều khoản",
+          example: "The contract includes a provision on confidentiality.",
+        },
+        {
+          word: "resolve",
+          meaning: "giải quyết",
+          example: "The company resolved the complaint quickly.",
+        },
+        {
+          word: "specific",
+          meaning: "cụ thể",
+          example: "Please provide specific details.",
+        },
+      ];
+
+      let index = 0;
+      const card = document.getElementById("card");
+      const wordEl = document.getElementById("word");
+      const meaningEl = document.getElementById("meaning");
+      const exampleEl = document.getElementById("example");
+
+      function render() {
+        card.classList.remove("flip");
+        wordEl.textContent = cards[index].word;
+        meaningEl.textContent = cards[index].meaning;
+        exampleEl.textContent = cards[index].example;
+      }
+
+      card.addEventListener("click", () => {
+        card.classList.toggle("flip");
+      });
+
+      document.getElementById("next").addEventListener("click", () => {
+        if (index < cards.length - 1) {
+          index++;
+          render();
+        }
+      });
+
+      document.getElementById("prev").addEventListener("click", () => {
+        if (index > 0) {
+          index--;
+          render();
+        }
+      });
+
+      render();
+    </script>
+  </body>
+</html>
