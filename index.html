@@ -2,7 +2,7 @@
 <html lang="vi">
   <head>
     <meta charset="UTF-8" />
-    <title>TOEIC Lesson 1 – Flashcards</title>
+    <title>TOEIC - Flashcards</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
       body {
@@ -119,66 +119,19 @@
     </div>
 
     <script>
-      const cards = [
-        {
-          word: "abide by",
-          meaning: "tuân thủ",
-          example: "Employees must abide by company policies.",
-        },
-        {
-          word: "assurance",
-          meaning: "sự đảm bảo / cam kết",
-          example:
-            "The manager gave assurance that the issue would be resolved.",
-        },
-        {
-          word: "cancellation",
-          meaning: "sự hủy bỏ",
-          example: "A cancellation fee may apply.",
-        },
-        {
-          word: "determine",
-          meaning: "xác định / quyết định",
-          example: "Sales results determine future plans.",
-        },
-        {
-          word: "engage",
-          meaning: "thuê / tham gia / làm gắn kết",
-          example: "The company engaged a consulting firm.",
-        },
-        {
-          word: "establish",
-          meaning: "thành lập / thiết lập",
-          example: "The company established clear guidelines.",
-        },
-        {
-          word: "obligate",
-          meaning: "bắt buộc / ràng buộc",
-          example: "The contract obligates both parties to comply.",
-        },
-        {
-          word: "party",
-          meaning: "bên (trong hợp đồng)",
-          example: "Both parties agreed to the terms.",
-        },
-        {
-          word: "provision",
-          meaning: "điều khoản",
-          example: "The contract includes a provision on confidentiality.",
-        },
-        {
-          word: "resolve",
-          meaning: "giải quyết",
-          example: "The company resolved the complaint quickly.",
-        },
-        {
-          word: "specific",
-          meaning: "cụ thể",
-          example: "Please provide specific details.",
-        },
-      ];
-
+      let cards = [];
       let index = 0;
+
+      // Load data từ file data.json
+      fetch("data.json")
+        .then((response) => response.json())
+        .then((data) => {
+          cards = data.lesson_1.words;
+          render();
+        })
+        .catch((error) => {
+          console.error("Lỗi khi load dữ liệu:", error);
+        });
       const card = document.getElementById("card");
       const wordEl = document.getElementById("word");
       const meaningEl = document.getElementById("meaning");
