@@ -5,19 +5,26 @@
     <title>TOEIC - Flashcards</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
+      :root {
+        --container-max: 360px;
+        --card-padding: clamp(14px, 4vw, 24px);
+      }
+
       body {
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-          sans-serif;
+        font-family: "Plus Jakarta Sans", system-ui, -apple-system, Segoe UI,
+          Roboto, Arial, sans-serif;
         background: #f5f7fb;
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100vh;
+        min-height: 100vh;
+        min-height: 100svh;
+        padding: 16px;
         margin: 0;
       }
 
       .card-container {
-        width: 360px;
+        width: min(var(--container-max), 92vw);
         perspective: 1000px;
         text-align: center;
       }
@@ -25,14 +32,11 @@
       .card {
         box-sizing: border-box;
         width: 100%;
-        height: 220px;
+        height: clamp(200px, 34svh, 240px);
         background: white;
         border-radius: 16px;
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 24px;
+        padding: 0;
         cursor: pointer;
         transition: transform 0.6s;
         transform-style: preserve-3d;
@@ -52,6 +56,9 @@
         align-items: center;
         justify-content: center;
         flex-direction: column;
+        padding: var(--card-padding);
+        box-sizing: border-box;
+        gap: 8px;
       }
 
       .back {
@@ -60,13 +67,15 @@
 
       h2 {
         margin: 0 0 8px;
-        font-size: 26px;
+        font-size: clamp(20px, 5.6vw, 26px);
+        line-height: 1.2;
       }
 
       p {
         margin: 0;
-        font-size: 18px;
+        font-size: clamp(14px, 4.4vw, 18px);
         color: #444;
+        line-height: 1.35;
       }
 
       .controls {
@@ -74,6 +83,7 @@
         display: flex;
         justify-content: space-between;
         width: 100%;
+        gap: 12px;
       }
 
       button {
@@ -84,6 +94,8 @@
         color: white;
         font-size: 14px;
         cursor: pointer;
+        flex: 1;
+        min-width: 0;
       }
 
       button:disabled {
@@ -94,6 +106,20 @@
         margin-top: 12px;
         font-size: 13px;
         color: #666;
+      }
+
+      @media (max-width: 360px) {
+        body {
+          padding: 12px;
+        }
+
+        .controls {
+          flex-direction: column;
+        }
+
+        button {
+          width: 100%;
+        }
       }
     </style>
   </head>
@@ -122,27 +148,49 @@
       let cards = [];
       let index = 0;
 
+      const card = document.getElementById("card");
+      const wordEl = document.getElementById("word");
+      const meaningEl = document.getElementById("meaning");
+      const exampleEl = document.getElementById("example");
+      const nextBtn = document.getElementById("next");
+      const prevBtn = document.getElementById("prev");
+
+      function setButtonsState() {
+        const hasCards = cards.length > 0;
+        nextBtn.disabled = !hasCards || index >= cards.length - 1;
+        prevBtn.disabled = !hasCards || index <= 0;
+      }
+
+      function render() {
+        if (!cards.length) {
+          wordEl.textContent = "";
+          meaningEl.textContent = "";
+          exampleEl.textContent = "";
+          setButtonsState();
+          return;
+        }
+
+        card.classList.remove("flip");
+        wordEl.textContent = cards[index].word;
+        meaningEl.textContent = cards[index].meaning;
+        exampleEl.textContent = cards[index].example;
+        setButtonsState();
+      }
+
+      // Trạng thái ban đầu khi chưa load xong data
+      setButtonsState();
+
       // Load data từ file data.json
       fetch("data.json")
         .then((response) => response.json())
         .then((data) => {
-          cards = data.lesson_1.words;
+          cards = Array.isArray(data.lesson_1.words) ? data.lesson_1.words : [];
+          index = 0;
           render();
         })
         .catch((error) => {
           console.error("Lỗi khi load dữ liệu:", error);
         });
-      const card = document.getElementById("card");
-      const wordEl = document.getElementById("word");
-      const meaningEl = document.getElementById("meaning");
-      const exampleEl = document.getElementById("example");
-
-      function render() {
-        card.classList.remove("flip");
-        wordEl.textContent = cards[index].word;
-        meaningEl.textContent = cards[index].meaning;
-        exampleEl.textContent = cards[index].example;
-      }
 
       card.addEventListener("click", () => {
         card.classList.toggle("flip");
@@ -161,8 +209,6 @@
           render();
         }
       });
-
-      render();
     </script>
   </body>
 </html>
